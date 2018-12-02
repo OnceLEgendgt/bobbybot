@@ -2,7 +2,7 @@ module.exports = {
   // Information
   name: 'agree',
   aliases: ['ok'],
-  description: 'LMAOBot agrees with you.',
+  description: 'Bobby agrees with you.',
   // Requirements
   // Function
   run: (client, command, msg, args) => {

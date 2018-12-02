@@ -2,7 +2,7 @@ module.exports = {
   // Information
   name: 'gayrate',
   aliases: ['gay', 'g%', '%g'],
-  description: 'LMAOBot will tell you how gay you\'re.',
+  description: 'Bobby will tell you how gay something is.',
   // Requirements
   // Function
   run: (client, command, msg, args) => {

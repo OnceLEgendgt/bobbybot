@@ -2,7 +2,7 @@ const snekfetch = require('snekfetch');
 module.exports = {
   // Information
   name: 'chuck',
-  description: 'LMAOBot will tell you a Check Norris joke.',
+  description: 'Bobby will tell you a Chuck Norris joke.',
   // Requirements
   // Function
   run: async (client, command, msg, args) => {

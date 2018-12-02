@@ -2,7 +2,7 @@ module.exports = {
   // Information
   name: 'invite',
   aliases: ['<', '>'],
-  description: 'Invite the bot to other servers.',
+  description: 'Invite Bobby to other servers.',
   // Requirements
   // Function
   run: (client, command, msg, args) => {
@@ -10,7 +10,7 @@ module.exports = {
       embed: {
         title: 'Invite Bobby to your Discord Server',
         color: 0xff4d4d,
-        description: '[Here](https://discordapp.com/oauth2/authorize/?permissions=1341643977&scope=bot&client_id=487984136745648138)',
+        description: '[Here](https://discordapp.com/oauth2/authorize/?permissions=1341643977&scope=bot&client_id=518434396244672513)',
         fields: [{
           name: 'Join Bobby\'s Official Discord Server',
           value: '[Here](https://discord.gg/mmPRWZM)',

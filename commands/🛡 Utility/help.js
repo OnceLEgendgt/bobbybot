@@ -2,7 +2,7 @@ module.exports = {
   // Information
   name: 'help',
   aliases: ['h', '?'],
-  description: 'Information on the LMAOBot\'s usage.',
+  description: 'Information on Bobby\'s usage.',
   // Requirements
   // Function
   run: (client, command, msg, args) => {
@@ -104,7 +104,6 @@ module.exports = {
           timestamp: new Date(),
           footer: {
             icon_url: client.user.avatarURL,
-            text: client.config.embed.footer,
           },
         },
       });

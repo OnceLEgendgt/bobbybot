@@ -1,7 +1,7 @@
 module.exports = {
   // Information
   name: 'ask',
-  description: 'Ask LMAOBot a yes or no question and he\'ll answer.',
+  description: 'Ask Bobby a yes or no question and he\'ll answer.',
   usage: '<question>',
   // Requirements
   args: {

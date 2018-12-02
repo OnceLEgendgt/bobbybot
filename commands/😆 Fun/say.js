@@ -1,8 +1,8 @@
 module.exports = {
   // Information
   name: 'say',
-  description: 'LMAOBot will say something for you.',
-  usage: '<what you want LMAOBot to say>',
+  description: 'Bobby will say something for you.',
+  usage: '<what you want Bobby to say>',
   // Requirements
   args: {
     req: true,

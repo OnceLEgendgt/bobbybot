@@ -5,6 +5,9 @@ const prefix = client.config.prefix;
 const fs = require('fs');
 
 client.commands = new Discord.Collection();
+client.reaction_msgs = new Discord.Collection();
+client.cooldowns = new Discord.Collection();
+
 const command_folders = fs.readdirSync('./commands');
 for (const folder of command_folders) {
   const command_files = fs.readdirSync(`./commands/${folder}`);
@@ -17,6 +20,40 @@ for (const folder of command_folders) {
   }
 }
 
+/**
+ * Adds a msg to reaction listening collection.
+ * @param {Object} [command] Object representing a bot's command.
+ * @param {String/Object} [message] Discord Message's id/ Discord Message object.
+ * @param {Array} [reactions] Array containing all Reactions to listen for.
+ * @param {Object} [options] Object containing options; options: timeout: integer/false, user_id: string
+ * @return {Boolean} True if added; else false.
+ */
+client.add_msg_reaction_listener = async (command, message, reactions, options) => {
+  options = Object.assign({
+    time: 60,
+    extra: {},
+  }, options);
+
+  for (let reaction of reactions) {
+    await message.react(reaction);
+  }
+
+  client.reaction_msgs.set(message.id, {
+    time: options.time,
+    emojis: reactions,
+    command_name: command.name,
+    message: message,
+    extra: options.extra,
+  });
+};
+
+/**
+ * Adds a msg to reaction listening collection.
+ * @param {String/Object} [message] Discord Message's id/ Discord Message object.
+ * @return {Boolean} True if added; else false.
+ */
+client.remove_msg_reaction_listener = (message) => {};
+
 
 client.on('ready', () => {
     console.log('Ready!');
@@ -24,7 +61,7 @@ client.on('ready', () => {
 
 client.on('message', message => {
     const msg = message;
-    const args = msg.content.slice(client.config.prefix.length + 1).split(/ +/g);
+    const args = msg.content.slice(client.config.prefix.length + 1).split(" ");
     const command_name = args.shift().toLowerCase();
 
     const command = client.commands.get(command_name) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(command_name));
@@ -64,6 +101,26 @@ client.on('guildCreate', guild => {
         },
       },
     });
+  });
+
+  client.on('messageReactionRemove', (reaction, user) => {
+    if (user.bot) return;
+  
+    const data = client.reaction_msgs.get(reaction.message.id);
+    if (!data) return;
+    if (data.time <= ((new Date() - data.message.createdAt) / 1000)) return client.reaction_msgs.delete(reaction.message.id);
+  
+    if (data.emojis.includes(reaction.emoji.name)) {
+      const command = client.commands.get(data.command_name);
+      if (!command) return;
+  
+      try {
+        command.on_reaction(client, command, data, 'removed', reaction);
+      } catch (error) {
+        console.error(error);
+        data.message.channel.send('There was an error in trying to execute that command!');
+      }
+    }
   });
 
 client.login(client.config.token);

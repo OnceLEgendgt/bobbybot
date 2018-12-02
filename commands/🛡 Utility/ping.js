@@ -2,7 +2,7 @@ module.exports = {
   // Information
   name: 'ping',
   aliases: ['.'],
-  description: 'Test the bot\'s response time.',
+  description: 'Test Bobby\'s response time.',
   // Requirements
   // Function
   run: (client, command, msg, args) => {
