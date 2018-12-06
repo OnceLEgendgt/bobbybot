@@ -7,18 +7,17 @@ module.exports = {
   // Function
   run: (client, command, msg, args) => {
     if (!args.length) {
-
       const commands = {};
+      // check for admin commands
       client.commands.forEach(function(command) {
         if (['admin'].includes(command.category.toLowerCase())) {
           return;
         } else if (!(command.category in commands)) {
           commands[command.category] = [];
         }
-
         commands[command.category].push(command.name);
       });
-
+      
       const fields = [];
       for (const category of Object.keys(commands)) {
         fields.push({
@@ -26,7 +25,7 @@ module.exports = {
           value: '*' + commands[category].join(', ') + '*',
         });
       }
-
+      
       msg.channel.send({
         embed: {
           color: 0xff4d4d,
@@ -44,20 +43,25 @@ module.exports = {
         },
       });
     } else {
-      const command = client.commands.get(args[0]) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0]));
-      if (!command) return;
-
+      let command = client.commands.get(args[0]) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(args[0]));
+      if (!command) return msg.channel.send(`${client.config.emojis.x} Unknown command!\nCan't help you with a command that doesn't exist ( ͡° ͜ʖ ͡°)`);
+      if(client.subcommands.get(command.name) && args.length > 1) {
+        command = client.subcommands.get(command.name).get(args[1]) || client.subcommands.get(command.name).find(cmd => cmd.aliases && cmd.aliases.includes(args[1]));
+        if(!command) return msg.channel.send(`${client.config.emojis.x} Unknown subcommand!\nCan't help you with a subcommand that doesn't exist ( ͡° ͜ʖ ͡°)`);
+      }
+      let parent = " ";
+      if('parent' in command) parent = command.parent + " ";
       // Setup fields
       const fields = [];
 
       if ('args' in command && command.args.req === true) {
         fields.push({
-          name: 'Argument Requirements',
-          value: `Minimum: ${command.args.min}`,
+          name: 'Required Arguments',
+          value: `The command requires \`${command.args.min}\` argument(s).\n**Usage**: \`${client.config.prefix} ${parent}${command.name} ${command.usage}\``,
         });
       }
-
-      if ('explanation' in command) {
+      
+      /*if ('explanation' in command) {
         const field_id = fields.push({
           name: 'Argument Information',
           value: '',
@@ -68,42 +72,58 @@ module.exports = {
           if ('default' in command.explanation[argument]) fields[field_id].value += `**Default:** *${command.explanation[argument].default}*\n`;
           if ('options' in command.explanation[argument]) fields[field_id].value += `**Options:** *${command.explanation[argument].options.join(', ')}*\n`;
         }
-      }
-
+      }*/
+      
       const requirements = [];
       for (const requirement of ['dev_only', 'guild_only', 'cooldown']) {
         if (requirement in command) {
           requirements.push(requirement.replace('_', ' ') + ': ' + command[requirement]);
         }
       }
-
+      
       if (requirements.length > 0) {
         fields.push({
           name: 'Command Requirements',
           value: requirements.join(' | '),
         });
       }
-
+      
       if ('aliases' in command) {
         fields.push({
           name: 'Command Aliases',
-          value: '*' + command.aliases.join(', ') + '*',
+          value: `You can use the command with these alternate names: **${command.aliases.join(", ")}**`,
         });
       }
-
+      
+      if (client.subcommands.get(command.name)) {
+        let subcmds = client.subcommands.get(command.name).keyArray();
+        for (let i = 0; i < subcmds.length; i++) {
+          subcmds[i] = "- **" + subcmds[i] + "**: " + client.subcommands.get(command.name).get(subcmds[i]).description;
+        }
+        subcmds.push(`The subcommands **must go after** the main command. (\`${client.config.prefix} ${command.name} <subcommand>\` )`);
+        fields.push({
+          name: 'Subcommands',
+          value: subcmds.join("\n"),
+        });
+      }
+      
+      parent = "";
+      if('parent' in command) parent = command.parent + " ";
       msg.channel.send({
         embed: {
-          color: 3447003,
+          color: Math.floor(Math.random() * 16777214) + 1,
           author: {
             name: client.user.username,
             icon_url: client.user.avatarURL,
           },
-          title: `${client.config.prefix} ${command.name}` + (command.usage ? ` ${command.usage}` : ''),
+       //   title: `${client.config.prefix} ${parent}${command.name}`,
+          title: `${client.config.emojis.info} **${parent.toUpperCase()}${command.name.toUpperCase()}**`,
           description: command.description,
           fields: fields,
           timestamp: new Date(),
           footer: {
             icon_url: client.user.avatarURL,
+            text: client.config.embed.footer
           },
         },
       });
