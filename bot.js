@@ -120,6 +120,12 @@ client.on('message', msg => {
   client.handleCommand(command, msg, args);  
 });
 
+/**
+ * Handles passed in command
+ * @param {Object} [command] The command to be handled
+ * @param {Object} [msg] The message that requested the command to be handled
+ * @param {Array} [args] An array of everything the user wrote after the command call
+ */
 client.handleCommand = (command, msg, args) => {
   
   // if required arguments aren't specified, don't run command and notify end user
