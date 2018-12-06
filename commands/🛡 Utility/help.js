@@ -22,7 +22,7 @@ module.exports = {
       for (const category of Object.keys(commands)) {
         fields.push({
           name: category,
-          value: '*' + commands[category].join(', ') + '*',
+          value: '' + commands[category].join(', ') + '',
         });
       }
       

@@ -15,7 +15,7 @@ module.exports = {
             icon_url: client.user.avatarURL,
           },
           title: 'Chuck Norris Joke',
-          description: `*${res.body.value.joke}*`,
+          description: `${res.body.value.joke}`,
           color: 0xff4d4d,
           timestamp: new Date(),
           footer: {

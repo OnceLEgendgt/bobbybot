@@ -1,3 +1,5 @@
+var seedrandom = require('seedrandom');
+
 module.exports = {
   // Information
   name: 'gayrate',
@@ -6,7 +8,7 @@ module.exports = {
   // Requirements
   // Function
   run: (client, command, msg, args) => {
-    const randomnumber = Math.floor(Math.random() * 101);
+    let randomnumber = Math.floor(seedrandom(msg.author.toString())() * 101);
     if(!args[0]) {
       return msg.channel.send({
         embed: {
@@ -28,6 +30,7 @@ module.exports = {
       });
     };
 
+    randomnumber = Math.floor(seedrandom(args[0].toLowerCase())() * 101);
     msg.channel.send({
       embed: {
         author: {

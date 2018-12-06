@@ -1,3 +1,4 @@
+var seedrandom = require('seedrandom');
 module.exports = {
     // Information
     name: '8ball',
@@ -28,6 +29,6 @@ module.exports = {
     ],
     // Function
     run: (client, command, msg, args) => {
-      msg.channel.send(command.responses[Math.floor(Math.random() * command.responses.length)]);
+      msg.channel.send(command.responses[Math.floor(seedrandom(args.join(""))() * command.responses.length)]);
     },
   };

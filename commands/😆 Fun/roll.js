@@ -1,7 +1,7 @@
 module.exports = {
   // Information
   name: 'roll',
-  description: 'Bobby will roll a 100-sided dice for you.',
+  description: 'Bobby will roll a 100-sided die for you.',
   // Requirements
   // Function
   run: (client, command, msg, args) => {

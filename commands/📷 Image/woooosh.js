@@ -5,7 +5,6 @@ const Discord = require('discord.js');
 module.exports = {
     // Information
     name: 'woooosh',
-    aliases: [],
     description: "Get a random meme from woooosh subreddit.",
 
     // Function
